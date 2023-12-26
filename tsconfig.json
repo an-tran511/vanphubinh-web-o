@@ -27,6 +27,18 @@
       ],
       "@/*": [
         "src/*"
+      ],
+      "@items/*": [
+        "src/routes/items/*"
+      ],
+      "@components/*": [
+        "src/components/*"
+      ],
+      "@nested-sidenav/*": [
+        "src/components/nested-sidenav/*"
+      ],
+      "@links-group/*": [
+        "src/components/links-group/*"
       ]
     }
   },
