@@ -1,4 +1,5 @@
-import '@mantine/core/styles.css';
+import '@mantine/core/styles.layer.css';
+import 'mantine-datatable/styles.layer.css';
 import { Loader, MantineProvider } from '@mantine/core';
 import { theme } from './theme';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';

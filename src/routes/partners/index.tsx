@@ -1,8 +1,9 @@
 import { getPartners } from '@/apis/partner';
 import { queryOptions, useSuspenseQuery } from '@tanstack/react-query';
 import { FileRoute } from '@tanstack/react-router';
-import { DataTable } from '@/components/table';
+import { DataTable } from 'mantine-datatable';
 import { List } from '@/components/crud/list';
+import '@/components/table/Table.module.css';
 
 const postsQueryOptions = queryOptions({
   queryKey: ['partners'],
@@ -19,26 +20,41 @@ function DashboardComponent() {
   const partners = postsQuery.data.data;
   const columns = [
     {
-      accessorKey: 'name',
-      header: 'Tên',
+      accessor: 'name',
+      title: 'Tên',
     },
     {
-      accessorKey: 'phone',
-      header: 'Số điện thoại',
+      accessor: 'phone',
+      title: 'Số điện thoại',
     },
     {
-      accessorKey: 'email',
-      header: 'Email',
+      accessor: 'email',
+      title: 'Email',
     },
     {
-      accessorKey: 'address',
-      header: 'Địa chỉ',
+      accessor: 'address',
+      title: 'Địa chỉ',
     },
   ];
+  console.log(partners);
 
   return (
-    <List title="Đối tác">
-      <DataTable data={partners} columns={columns} />
+    <List title="Đối tác" onCreate>
+      <DataTable
+        styles={{
+          header: {
+            textTransform: 'uppercase',
+            fontSize: '12px',
+            backgroundColor: '#F9F9F9',
+          },
+        }}
+        withTableBorder
+        highlightOnHover
+        columns={columns}
+        records={partners}
+        verticalSpacing="sm"
+        verticalAlign="top"
+      />
     </List>
   );
 }
