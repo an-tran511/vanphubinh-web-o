@@ -1,0 +1,6 @@
+.header {
+  transition: box-shadow 150ms ease;
+  box-shadow: var(--mantine-shadow-xs);
+  text-transform: uppercase;
+  z-index: 1;
+}

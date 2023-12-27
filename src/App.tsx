@@ -1,11 +1,12 @@
 import '@mantine/core/styles.css';
 import { Loader, MantineProvider } from '@mantine/core';
 import { theme } from './theme';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import { Router, RouterProvider } from '@tanstack/react-router';
 import { routeTree } from './routeTree.gen';
 
 const queryClient = new QueryClient();
+
 const router = new Router({
   routeTree,
   defaultPendingComponent: () => (
@@ -14,7 +15,6 @@ const router = new Router({
     </div>
   ),
   context: {
-    auth: undefined!, // We'll inject this when we render
     queryClient,
   },
   defaultPreload: 'intent',

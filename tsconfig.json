@@ -39,6 +39,24 @@
       ],
       "@links-group/*": [
         "src/components/links-group/*"
+      ],
+      "@partners/*": [
+        "src/routes/partners/*"
+      ],
+      "@table/*": [
+        "src/components/table/*"
+      ],
+      "@apis/*": [
+        "src/apis/*"
+      ],
+      "@utils/*": [
+        "src/utils/*"
+      ],
+      "@interfaces/*": [
+        "src/utils/interfaces/*"
+      ],
+      "@crud/*": [
+        "src/components/crud/*"
       ]
     }
   },

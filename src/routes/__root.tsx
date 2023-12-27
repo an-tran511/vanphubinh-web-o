@@ -1,9 +1,11 @@
-import { Outlet, RootRoute } from '@tanstack/react-router';
-import { AppShell, Burger, Group, ScrollArea, Text, em } from '@mantine/core';
+import { Outlet, rootRouteWithContext } from '@tanstack/react-router';
+import { AppShell, Burger, Group, em } from '@mantine/core';
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
-import { lighten } from '@mantine/core';
+import { QueryClient } from '@tanstack/react-query';
 
-export const Route = new RootRoute({
+export const Route = rootRouteWithContext<{
+  queryClient: QueryClient;
+}>()({
   component: RootComponent,
 });
 
@@ -15,15 +17,14 @@ function RootComponent() {
       layout="alt"
       header={{ height: 60, collapsed: !isMobile }}
       navbar={{ width: 250, breakpoint: 'md', collapsed: { mobile: !opened } }}
-      padding="md"
     >
       <AppShell.Header>
         <Group h="100%" px="md">
           <Burger opened={opened} onClick={toggle} hiddenFrom="md" size="sm" />
         </Group>
       </AppShell.Header>
-      <AppShell.Navbar p="md" bg={lighten('#E7F5FF', 0.9)}></AppShell.Navbar>
-      <AppShell.Main h="100dvh">
+      <AppShell.Navbar p="md" style={{ boxShadow: 'var(--mantine-shadow-md)' }}></AppShell.Navbar>
+      <AppShell.Main h="100dvh" bg="white">
         <Outlet />
       </AppShell.Main>
     </AppShell>
