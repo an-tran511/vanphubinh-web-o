@@ -57,6 +57,9 @@
       ],
       "@crud/*": [
         "src/components/crud/*"
+      ],
+      "@types/*": [
+        "src/types/*"
       ]
     }
   },

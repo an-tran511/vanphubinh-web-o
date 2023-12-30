@@ -17,13 +17,14 @@ function RootComponent() {
       layout="alt"
       header={{ height: 60, collapsed: !isMobile }}
       navbar={{ width: 250, breakpoint: 'md', collapsed: { mobile: !opened } }}
+      padding="0"
     >
       <AppShell.Header>
-        <Group h="100%" px="md">
+        <Group h="100%" px={{ base: 'md', md: 'lg' }}>
           <Burger opened={opened} onClick={toggle} hiddenFrom="md" size="sm" />
         </Group>
       </AppShell.Header>
-      <AppShell.Navbar p="md" style={{ boxShadow: 'var(--mantine-shadow-md)' }}></AppShell.Navbar>
+      <AppShell.Navbar p="md"></AppShell.Navbar>
       <AppShell.Main h="100dvh" bg="white">
         <Outlet />
       </AppShell.Main>

@@ -1,6 +1,11 @@
+.table {
+  th,
+  td {
+    vertical-align: middle;
+  }
+}
 .header {
-  transition: box-shadow 150ms ease;
-  box-shadow: var(--mantine-shadow-xs);
   text-transform: uppercase;
-  z-index: 1;
+  font-size: 12px;
+  background-color: #f9f9f9;
 }
