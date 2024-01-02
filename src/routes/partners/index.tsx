@@ -48,21 +48,29 @@ function DashboardComponent() {
   const [searchValueDraft, setSearchValueDraft] = useState(searchValue ?? '');
   const [debouncedSearchValueDraft] = useDebouncedValue(searchValueDraft, 500);
 
-  // useEffect(() => {
-  //   setSearchValueDraft(searchValue ?? '');
-  // }, [searchValue]);
-
   useEffect(() => {
     navigate({
       search: (old) => {
         return {
           ...old,
           searchValue: debouncedSearchValueDraft,
+          page: 1,
         };
       },
       replace: true,
     });
   }, [debouncedSearchValueDraft, navigate]);
+
+  useEffect(() => {
+    navigate({
+      search: (old) => {
+        return {
+          ...old,
+          page: page ?? 1,
+        };
+      },
+    });
+  }, [navigate, page]);
 
   const postsQuery = useSuspenseQuery(
     partnersQueryOptions({ page, searchValue: debouncedSearchValueDraft })
@@ -123,7 +131,7 @@ function DashboardComponent() {
     total: meta.total,
     onPageChange: (page: number) => {
       navigate({
-        search: () => ({ page: page }),
+        search: () => ({ page: page, searchValue: debouncedSearchValueDraft }),
       });
     },
     isLoading,
