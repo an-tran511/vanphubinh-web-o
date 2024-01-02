@@ -1,6 +1,6 @@
 import { client } from '@/utils/client';
-import { Partner, NewPartner } from '@/types/partner';
-import { ListResponse } from '@/types/response';
+import { Partner, NewPartner } from '@/app-types/partner';
+import { ListResponse } from '@/app-types/response';
 
 export const getPartners = async (deps: string | object) => {
   const response = await client.url('/partners').query(deps).get();
@@ -10,5 +10,5 @@ export const getPartners = async (deps: string | object) => {
 export const createPartner = async (newPartner: NewPartner) => {
   console.log(newPartner);
   const response = await client.url('/partners').post(newPartner);
-  return response;
+  return response as Partner;
 };

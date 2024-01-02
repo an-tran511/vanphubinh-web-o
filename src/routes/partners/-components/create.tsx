@@ -1,9 +1,10 @@
 import { createPartner } from '@/apis/partner';
-import { NewPartner } from '@/types/partner';
+import { NewPartner, Partner } from '@/app-types/partner';
 import { Button, Checkbox, Group, Stack, TextInput } from '@mantine/core';
 import { useMutation } from '@tanstack/react-query';
 import { Field, Form } from 'houseform';
 import { useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 
 interface PartnerCreateProps {
   closeModalCallback: () => void;
@@ -14,8 +15,9 @@ export function PartnerCreate(props: PartnerCreateProps) {
 
   const mutation = useMutation({
     mutationFn: (values: NewPartner) => createPartner(values),
-    onSuccess: () => {
+    onSuccess: (data: Partner) => {
       queryClient.invalidateQueries({ queryKey: ['partners'] });
+      toast.success(`${data.name} đã được tạo thành công`);
       closeModalCallback();
     },
   });

@@ -53,7 +53,7 @@ export default function App() {
   return (
     <MantineProvider theme={theme}>
       <QueryClientProvider client={queryClient}>
-        <Toaster />
+        <Toaster richColors />
         <RouterProvider router={router} />
       </QueryClientProvider>
     </MantineProvider>

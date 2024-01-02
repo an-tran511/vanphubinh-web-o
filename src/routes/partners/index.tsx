@@ -1,15 +1,14 @@
-import { getPartners } from '@/apis/partner';
+import { getPartners } from '@apis/partner';
 import { queryOptions, useSuspenseQuery, keepPreviousData } from '@tanstack/react-query';
 import { FileRoute, useNavigate } from '@tanstack/react-router';
 import { DataTable } from 'mantine-datatable';
-import { List } from '@/components/crud/list';
+import { List } from '@components/crud/list';
 import { useDisclosure } from '@mantine/hooks';
 import { Badge, Drawer, Group } from '@mantine/core';
-import { PartnerCreate } from './__create';
-import { Partner } from '@/utils/interfaces/list';
+import { PartnerCreate } from './-components/create';
+import { type Partner } from '@/app-types/partner';
 import { z } from 'zod';
 import classes from '@/components/table/Table.module.css';
-import Avvvatars from 'avvvatars-react';
 
 const partnerSearchSchema = z.object({
   page: z.number().catch(1),
@@ -49,14 +48,6 @@ function DashboardComponent() {
     {
       accessor: 'name',
       title: 'Tên đối tác',
-      render: (record: Partner) => {
-        return (
-          <Group gap="xs" p="0" m="0">
-            <Avvvatars value={record.name} />
-            {record.name}
-          </Group>
-        );
-      },
     },
     {
       accessor: 'phone',
@@ -77,7 +68,7 @@ function DashboardComponent() {
         return (
           <Group gap="xs">
             {record.isCustomer ? (
-              <Badge color="blue" variant="light" size="sm">
+              <Badge color="rgba(181, 163, 25, 1)" variant="light" size="sm">
                 Khách hàng
               </Badge>
             ) : (
