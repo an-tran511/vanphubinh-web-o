@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ESNext"
+    ],
     "module": "ESNext",
     "skipLibCheck": true,
     /* Bundler mode */
@@ -18,22 +22,50 @@
     "noFallthroughCasesInSwitch": true,
     "baseUrl": "./",
     "paths": {
-      "@routes/*": ["src/routes/*"],
-      "@/*": ["src/*"],
-      "@items/*": ["src/routes/items/*"],
-      "@components/*": ["src/components/*"],
-      "@nested-sidenav/*": ["src/components/nested-sidenav/*"],
-      "@links-group/*": ["src/components/links-group/*"],
-      "@partners/*": ["src/routes/partners/*"],
-      "@table/*": ["src/components/table/*"],
-      "@apis/*": ["src/apis/*"],
-      "@utils/*": ["src/utils/*"],
-      "@interfaces/*": ["src/utils/interfaces/*"],
-      "@crud/*": ["src/components/crud/*"],
-      "@app-types/*": ["src/app-types/*"]
+      "@routes/*": [
+        "src/routes/*"
+      ],
+      "@/*": [
+        "src/*"
+      ],
+      "@items/*": [
+        "src/routes/items/*"
+      ],
+      "@components/*": [
+        "src/components/*"
+      ],
+      "@nested-sidenav/*": [
+        "src/components/nested-sidenav/*"
+      ],
+      "@links-group/*": [
+        "src/components/links-group/*"
+      ],
+      "@partners/*": [
+        "src/routes/partners/*"
+      ],
+      "@table/*": [
+        "src/components/table/*"
+      ],
+      "@apis/*": [
+        "src/apis/*"
+      ],
+      "@utils/*": [
+        "src/utils/*"
+      ],
+      "@interfaces/*": [
+        "src/utils/interfaces/*"
+      ],
+      "@crud/*": [
+        "src/components/crud/*"
+      ],
+      "@app-types/*": [
+        "src/app-types/*"
+      ]
     }
   },
-  "include": ["src"],
+  "include": [
+    "src"
+  ],
   "references": [
     {
       "path": "./tsconfig.node.json"

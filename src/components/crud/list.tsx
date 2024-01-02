@@ -1,4 +1,4 @@
-import { Group, Stack, TextInput, Card, Box, Button, Title, Pagination, Text } from '@mantine/core';
+import { Group, Stack, Card, Box, Button, Title, Pagination, Text } from '@mantine/core';
 import { useNavigate } from '@tanstack/react-router';
 import { ReactNode } from 'react';
 
@@ -41,11 +41,6 @@ export const List = (props: ListProps) => {
           <Button variant="filled" justify="space-between" onClick={createHandler}>
             Thêm {title.toLowerCase()}
           </Button>
-        </Group>
-      </Box>
-      <Box px={{ base: 'md', md: 'lg' }} pt="md" bg="white">
-        <Group grow>
-          <TextInput variant="default" w="100%" placeholder="Tìm kiếm" />
         </Group>
       </Box>
       <Card pb="0" pt="md" px="0" h="100%" mah="100%" bg="white">

@@ -3,15 +3,17 @@ import { queryOptions, useSuspenseQuery, keepPreviousData } from '@tanstack/reac
 import { FileRoute, useNavigate } from '@tanstack/react-router';
 import { DataTable } from 'mantine-datatable';
 import { List } from '@components/crud/list';
-import { useDisclosure } from '@mantine/hooks';
-import { Badge, Drawer, Group } from '@mantine/core';
+import { useDebouncedValue, useDisclosure } from '@mantine/hooks';
+import { Badge, Box, Drawer, Group, TextInput } from '@mantine/core';
 import { PartnerCreate } from './-components/create';
 import { type Partner } from '@/app-types/partner';
 import { z } from 'zod';
 import classes from '@/components/table/Table.module.css';
+import { useEffect, useState } from 'react';
 
 const partnerSearchSchema = z.object({
   page: z.number().catch(1),
+  searchValue: z.string().catch(''),
   // filter: z.string().catch(''),
   // sort: z.enum(['newest', 'oldest', 'price']).catch('newest'),
 });
@@ -26,6 +28,13 @@ const partnersQueryOptions = (deps: string | object) =>
 export const Route = new FileRoute('/partners/').createRoute({
   component: DashboardComponent,
   validateSearch: partnerSearchSchema,
+  preSearchFilters: [
+    (search) => ({
+      ...search,
+      page: search.page ?? 1,
+      searchValue: search.searchValue ?? '',
+    }),
+  ],
   loader: ({ context: { queryClient }, deps }) =>
     queryClient.ensureQueryData(partnersQueryOptions(deps)),
   errorComponent: () => <div>error</div>,
@@ -35,8 +44,29 @@ function DashboardComponent() {
   const { useSearch } = Route;
   const navigate = useNavigate();
   const [opened, { open, close }] = useDisclosure(false);
-  const { page } = useSearch();
-  const postsQuery = useSuspenseQuery(partnersQueryOptions({ page }));
+  const { page, searchValue } = useSearch();
+  const [searchValueDraft, setSearchValueDraft] = useState(searchValue ?? '');
+  const [debouncedSearchValueDraft] = useDebouncedValue(searchValueDraft, 500);
+
+  // useEffect(() => {
+  //   setSearchValueDraft(searchValue ?? '');
+  // }, [searchValue]);
+
+  useEffect(() => {
+    navigate({
+      search: (old) => {
+        return {
+          ...old,
+          searchValue: debouncedSearchValueDraft,
+        };
+      },
+      replace: true,
+    });
+  }, [debouncedSearchValueDraft, navigate]);
+
+  const postsQuery = useSuspenseQuery(
+    partnersQueryOptions({ page, searchValue: debouncedSearchValueDraft })
+  );
   const partners = postsQuery.data.data;
   const meta = postsQuery.data.meta;
   const isLoading = postsQuery.isFetching || postsQuery.isLoading;
@@ -101,6 +131,17 @@ function DashboardComponent() {
 
   return (
     <List title="Đối tác" onCreateHandler={open} pagination={pagination}>
+      <Box px={{ base: 'md', md: 'lg' }} pb="md" bg="white">
+        <Group grow>
+          <TextInput
+            variant="default"
+            w="100%"
+            placeholder="Tìm kiếm"
+            value={searchValueDraft}
+            onChange={(event) => setSearchValueDraft(event.currentTarget.value)}
+          />
+        </Group>
+      </Box>
       <DataTable
         withTableBorder
         minHeight={180}
