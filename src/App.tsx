@@ -1,11 +1,12 @@
 import '@mantine/core/styles.layer.css';
 import 'mantine-datatable/styles.layer.css';
-import { Loader, MantineProvider } from '@mantine/core';
+import { Loader, MantineProvider, Center } from '@mantine/core';
 import { theme } from './theme';
 import { QueryClientProvider, QueryClient, QueryCache, MutationCache } from '@tanstack/react-query';
 import { Router, RouterProvider } from '@tanstack/react-router';
 import { routeTree } from './routeTree.gen';
 import { Toaster, toast } from 'sonner';
+import { Error } from './components/error';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -36,10 +37,11 @@ const queryClient = new QueryClient({
 const router = new Router({
   routeTree,
   defaultPendingComponent: () => (
-    <div className={`p-2 text-2xl`}>
+    <Center h="100vh">
       <Loader />
-    </div>
+    </Center>
   ),
+  defaultErrorComponent: () => <Error />,
   context: {
     queryClient,
   },

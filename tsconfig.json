@@ -22,41 +22,20 @@
     "noFallthroughCasesInSwitch": true,
     "baseUrl": "./",
     "paths": {
-      "@routes/*": [
-        "src/routes/*"
-      ],
       "@/*": [
         "src/*"
       ],
-      "@items/*": [
-        "src/routes/items/*"
+      "@routes/*": [
+        "src/routes/*"
       ],
       "@components/*": [
         "src/components/*"
-      ],
-      "@nested-sidenav/*": [
-        "src/components/nested-sidenav/*"
-      ],
-      "@links-group/*": [
-        "src/components/links-group/*"
-      ],
-      "@partners/*": [
-        "src/routes/partners/*"
-      ],
-      "@table/*": [
-        "src/components/table/*"
       ],
       "@apis/*": [
         "src/apis/*"
       ],
       "@utils/*": [
         "src/utils/*"
-      ],
-      "@interfaces/*": [
-        "src/utils/interfaces/*"
-      ],
-      "@crud/*": [
-        "src/components/crud/*"
       ],
       "@app-types/*": [
         "src/app-types/*"

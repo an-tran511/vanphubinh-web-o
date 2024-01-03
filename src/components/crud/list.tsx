@@ -1,4 +1,16 @@
-import { Group, Stack, Card, Box, Button, Title, Pagination, Text } from '@mantine/core';
+import {
+  Group,
+  Stack,
+  Card,
+  Box,
+  Button,
+  Title,
+  Pagination,
+  Text,
+  Breadcrumbs,
+  Anchor,
+} from '@mantine/core';
+import { CaretRight, House } from '@phosphor-icons/react';
 import { useNavigate } from '@tanstack/react-router';
 import { ReactNode } from 'react';
 
@@ -23,27 +35,34 @@ export const List = (props: ListProps) => {
 
   const createHandler =
     typeof onCreateHandler === 'function' ? onCreateHandler : defaultHandleClick;
-
+  const items = [
+    {
+      title: <House size={12} />,
+      href: '#',
+    },
+    { title: 'Bao bì', href: '#' },
+  ].map((item, index) => (
+    <Anchor href={item.href} key={index} size="xs">
+      {item.title}
+    </Anchor>
+  ));
   return (
-    <Stack h={{ base: 'calc(100vh - 60px)', md: '100vh' }} p="0" gap="0">
+    <Stack h={{ base: 'calc(100vh - 60px)', md: '100vh' }} pt="lg" gap="0">
       <Box
-        px={{ base: 'md', md: 'lg' }}
-        // py="sm"
+        px="lg"
         bg="white"
-        style={{
-          borderBottom: '1px solid #e0e0e0',
-        }}
+        // style={{
+        //   borderBottom: '1px solid #e0e0e0',
+        // }}
       >
-        <Group justify="space-between" py={{ base: 'xs', md: 'sm' }}>
-          <Group>
-            <Title order={2}>{title}</Title>
-          </Group>
+        <Group justify="space-between" mt="0">
+          <Title order={2}>{title}</Title>
           <Button variant="filled" justify="space-between" onClick={createHandler}>
             Thêm {title.toLowerCase()}
           </Button>
         </Group>
       </Box>
-      <Card pb="0" pt="md" px="0" h="100%" mah="100%" bg="white">
+      <Card py="0" px="0" h="100%" mah="100%" bg="white">
         {children}
       </Card>
       {page && onPageChange && lastPage && (

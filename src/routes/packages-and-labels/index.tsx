@@ -3,13 +3,14 @@ import { queryOptions, useSuspenseQuery, keepPreviousData } from '@tanstack/reac
 import { FileRoute, useNavigate } from '@tanstack/react-router';
 import { DataTable } from 'mantine-datatable';
 import { List } from '@components/crud/list';
-import { useDebouncedValue, useDisclosure } from '@mantine/hooks';
-import { Badge, Box, Drawer, Group, TextInput } from '@mantine/core';
-import { PartnerCreate } from './-components/create';
+import { useDebouncedValue, useDisclosure, useMediaQuery } from '@mantine/hooks';
+import { Badge, Box, Group, Modal, TextInput, Text, Title } from '@mantine/core';
 import { type Partner } from '@/app-types/partner';
 import { z } from 'zod';
 import classes from '@/components/table/Table.module.css';
 import { useEffect, useState } from 'react';
+import { CreateComponent } from './-create';
+import modalClasses from '@/components/modal/Modal.module.css';
 
 const partnerSearchSchema = z.object({
   page: z.number().catch(1),
@@ -25,8 +26,8 @@ const partnersQueryOptions = (deps: string | object) =>
     placeholderData: keepPreviousData,
   });
 
-export const Route = new FileRoute('/partners/').createRoute({
-  component: DashboardComponent,
+export const Route = new FileRoute('/packages-and-labels/').createRoute({
+  component: ListComponent,
   validateSearch: partnerSearchSchema,
   preSearchFilters: [
     (search) => ({
@@ -39,37 +40,38 @@ export const Route = new FileRoute('/partners/').createRoute({
     queryClient.ensureQueryData(partnersQueryOptions(deps)),
 });
 
-function DashboardComponent() {
+function ListComponent() {
   const { useSearch } = Route;
   const navigate = useNavigate();
-  const [opened, { open, close }] = useDisclosure(false);
   const { page, searchValue } = useSearch();
   const [searchValueDraft, setSearchValueDraft] = useState(searchValue ?? '');
   const [debouncedSearchValueDraft] = useDebouncedValue(searchValueDraft, 500);
+  const [opened, { open, close }] = useDisclosure(false);
+  const isMobile = useMediaQuery('(max-width: 50em)');
 
-  useEffect(() => {
-    navigate({
-      search: (old) => {
-        return {
-          ...old,
-          searchValue: debouncedSearchValueDraft,
-          page: 1,
-        };
-      },
-      replace: true,
-    });
-  }, [debouncedSearchValueDraft, navigate]);
+  // useEffect(() => {
+  //   navigate({
+  //     search: (old) => {
+  //       return {
+  //         ...old,
+  //         searchValue: debouncedSearchValueDraft,
+  //         page: 1,
+  //       };
+  //     },
+  //     replace: true,
+  //   });
+  // }, [debouncedSearchValueDraft]);
 
-  useEffect(() => {
-    navigate({
-      search: (old) => {
-        return {
-          ...old,
-          page: page ?? 1,
-        };
-      },
-    });
-  }, [navigate, page]);
+  // useEffect(() => {
+  //   navigate({
+  //     search: (old) => {
+  //       return {
+  //         ...old,
+  //         page: page ?? 1,
+  //       };
+  //     },
+  //   });
+  // }, [page]);
 
   const postsQuery = useSuspenseQuery(
     partnersQueryOptions({ page, searchValue: debouncedSearchValueDraft })
@@ -137,23 +139,37 @@ function DashboardComponent() {
   };
 
   return (
-    <List title="Đối tác" onCreateHandler={open} pagination={pagination}>
-      <Box px={{ base: 'md', md: 'lg' }} pb="md" bg="white">
+    <List title="Bao bì" pagination={pagination} onCreateHandler={open}>
+      <Box px="lg" my="lg" bg="white">
         <Group grow>
           <TextInput
+            size="xs"
             variant="default"
             w="100%"
-            size="xs"
             placeholder="Tìm kiếm"
             value={searchValueDraft}
             onChange={(event) => setSearchValueDraft(event.currentTarget.value)}
           />
         </Group>
       </Box>
+      <Modal
+        classNames={{
+          header: modalClasses.header,
+          // root: modalClasses.root,
+        }}
+        size="55%"
+        fullScreen={isMobile}
+        opened={opened}
+        onClose={close}
+        title={<Title order={4}>Thêm bao bì</Title>}
+      >
+        <CreateComponent />
+      </Modal>
       <DataTable
         withTableBorder
         minHeight={180}
         classNames={{
+          root: classes.root,
           header: classes.header,
           table: classes.table,
         }}
@@ -165,9 +181,6 @@ function DashboardComponent() {
         verticalAlign="top"
         noRecordsText="Không có dữ liệu"
       />
-      <Drawer opened={opened} onClose={close} title="Tạo đối tác" position="right">
-        <PartnerCreate closeModalCallback={close} />
-      </Drawer>
     </List>
   );
 }
