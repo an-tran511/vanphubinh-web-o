@@ -39,6 +39,9 @@
       ],
       "@app-types/*": [
         "src/app-types/*"
+      ],
+      "@query-options/*": [
+        "src/query-options/*"
       ]
     }
   },

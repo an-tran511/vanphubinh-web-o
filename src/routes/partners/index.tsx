@@ -1,5 +1,4 @@
-import { getPartners } from '@apis/partner';
-import { queryOptions, useSuspenseQuery, keepPreviousData } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { FileRoute, useNavigate } from '@tanstack/react-router';
 import { DataTable } from 'mantine-datatable';
 import { List } from '@components/crud/list';
@@ -10,6 +9,8 @@ import { type Partner } from '@/app-types/partner';
 import { z } from 'zod';
 import classes from '@/components/table/Table.module.css';
 import { useEffect, useState } from 'react';
+import { partnersQueryOptions } from '@apis/query-options';
+import { ListResponse } from '@/app-types/response';
 
 const partnerSearchSchema = z.object({
   page: z.number().catch(1),
@@ -17,13 +18,6 @@ const partnerSearchSchema = z.object({
   // filter: z.string().catch(''),
   // sort: z.enum(['newest', 'oldest', 'price']).catch('newest'),
 });
-
-const partnersQueryOptions = (deps: string | object) =>
-  queryOptions({
-    queryKey: ['partners', deps],
-    queryFn: () => getPartners(deps),
-    placeholderData: keepPreviousData,
-  });
 
 export const Route = new FileRoute('/partners/').createRoute({
   component: DashboardComponent,
@@ -36,7 +30,7 @@ export const Route = new FileRoute('/partners/').createRoute({
     }),
   ],
   loader: ({ context: { queryClient }, deps }) =>
-    queryClient.ensureQueryData(partnersQueryOptions(deps)),
+    queryClient.ensureQueryData(partnersQueryOptions({ deps })),
 });
 
 function DashboardComponent() {
@@ -53,29 +47,19 @@ function DashboardComponent() {
         return {
           ...old,
           searchValue: debouncedSearchValueDraft,
-          page: 1,
+          page: page ? page : 1,
         };
       },
       replace: true,
     });
-  }, [debouncedSearchValueDraft, navigate]);
-
-  useEffect(() => {
-    navigate({
-      search: (old) => {
-        return {
-          ...old,
-          page: page ?? 1,
-        };
-      },
-    });
-  }, [navigate, page]);
+  }, [debouncedSearchValueDraft, page]);
 
   const postsQuery = useSuspenseQuery(
-    partnersQueryOptions({ page, searchValue: debouncedSearchValueDraft })
+    partnersQueryOptions({ deps: { page, searchValue: debouncedSearchValueDraft } })
   );
-  const partners = postsQuery.data.data;
-  const meta = postsQuery.data.meta;
+  const partnerResponse = postsQuery.data as ListResponse<Partner>;
+  const partners = partnerResponse.data;
+  const meta = partnerResponse.meta;
   const isLoading = postsQuery.isFetching || postsQuery.isLoading;
   const columns = [
     {
@@ -138,12 +122,10 @@ function DashboardComponent() {
 
   return (
     <List title="Đối tác" onCreateHandler={open} pagination={pagination}>
-      <Box px={{ base: 'md', md: 'lg' }} pb="md" bg="white">
-        <Group grow>
+      <Box px={{ base: 'md', md: 'lg' }} py="md" bg="white">
+        <Group>
           <TextInput
             variant="default"
-            w="100%"
-            size="xs"
             placeholder="Tìm kiếm"
             value={searchValueDraft}
             onChange={(event) => setSearchValueDraft(event.currentTarget.value)}

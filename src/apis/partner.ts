@@ -8,7 +8,6 @@ export const getPartners = async (deps: string | object) => {
 };
 
 export const createPartner = async (newPartner: NewPartner) => {
-  console.log(newPartner);
   const response = await client.url('/partners').post(newPartner);
   return response as Partner;
 };

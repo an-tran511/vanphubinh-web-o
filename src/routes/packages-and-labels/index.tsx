@@ -1,34 +1,31 @@
-import { getPartners } from '@apis/partner';
+import { getPackagesAndLabels } from '@/apis/package-and-label';
 import { queryOptions, useSuspenseQuery, keepPreviousData } from '@tanstack/react-query';
 import { FileRoute, useNavigate } from '@tanstack/react-router';
 import { DataTable } from 'mantine-datatable';
 import { List } from '@components/crud/list';
-import { useDebouncedValue, useDisclosure, useMediaQuery } from '@mantine/hooks';
-import { Badge, Box, Group, Modal, TextInput, Text, Title } from '@mantine/core';
-import { type Partner } from '@/app-types/partner';
+import { useDebouncedValue } from '@mantine/hooks';
+import { Box, Group, TextInput } from '@mantine/core';
 import { z } from 'zod';
 import classes from '@/components/table/Table.module.css';
-import { useEffect, useState } from 'react';
-import { CreateComponent } from './-create';
-import modalClasses from '@/components/modal/Modal.module.css';
+import { useState } from 'react';
 
-const partnerSearchSchema = z.object({
+const packageSearchSchema = z.object({
   page: z.number().catch(1),
   searchValue: z.string().catch(''),
   // filter: z.string().catch(''),
   // sort: z.enum(['newest', 'oldest', 'price']).catch('newest'),
 });
 
-const partnersQueryOptions = (deps: string | object) =>
+const packagesQueryOptions = (deps: string | object) =>
   queryOptions({
-    queryKey: ['partners', deps],
-    queryFn: () => getPartners(deps),
+    queryKey: ['packages-and-labels', deps],
+    queryFn: () => getPackagesAndLabels(deps),
     placeholderData: keepPreviousData,
   });
 
 export const Route = new FileRoute('/packages-and-labels/').createRoute({
   component: ListComponent,
-  validateSearch: partnerSearchSchema,
+  validateSearch: packageSearchSchema,
   preSearchFilters: [
     (search) => ({
       ...search,
@@ -37,7 +34,7 @@ export const Route = new FileRoute('/packages-and-labels/').createRoute({
     }),
   ],
   loader: ({ context: { queryClient }, deps }) =>
-    queryClient.ensureQueryData(partnersQueryOptions(deps)),
+    queryClient.ensureQueryData(packagesQueryOptions(deps)),
 });
 
 function ListComponent() {
@@ -46,8 +43,6 @@ function ListComponent() {
   const { page, searchValue } = useSearch();
   const [searchValueDraft, setSearchValueDraft] = useState(searchValue ?? '');
   const [debouncedSearchValueDraft] = useDebouncedValue(searchValueDraft, 500);
-  const [opened, { open, close }] = useDisclosure(false);
-  const isMobile = useMediaQuery('(max-width: 50em)');
 
   // useEffect(() => {
   //   navigate({
@@ -73,12 +68,12 @@ function ListComponent() {
   //   });
   // }, [page]);
 
-  const postsQuery = useSuspenseQuery(
-    partnersQueryOptions({ page, searchValue: debouncedSearchValueDraft })
+  const packagesQuery = useSuspenseQuery(
+    packagesQueryOptions({ page, searchValue: debouncedSearchValueDraft })
   );
-  const partners = postsQuery.data.data;
-  const meta = postsQuery.data.meta;
-  const isLoading = postsQuery.isFetching || postsQuery.isLoading;
+  const packages = packagesQuery.data.data;
+  const meta = packagesQuery.data.meta;
+  const isLoading = packagesQuery.isFetching || packagesQuery.isLoading;
   const columns = [
     {
       accessor: 'id',
@@ -100,30 +95,6 @@ function ListComponent() {
       accessor: 'address',
       title: 'Địa chỉ',
     },
-    {
-      accessor: '',
-      title: 'Loại đối tác',
-      render: (record: Partner) => {
-        return (
-          <Group gap="xs">
-            {record.isCustomer ? (
-              <Badge color="rgba(181, 163, 25, 1)" variant="light" size="sm">
-                Khách hàng
-              </Badge>
-            ) : (
-              <></>
-            )}
-            {record.isSupplier ? (
-              <Badge color="dark" variant="light" size="sm">
-                Nhà cung cấp
-              </Badge>
-            ) : (
-              <></>
-            )}
-          </Group>
-        );
-      },
-    },
   ];
 
   const pagination = {
@@ -139,32 +110,31 @@ function ListComponent() {
   };
 
   return (
-    <List title="Bao bì" pagination={pagination} onCreateHandler={open}>
+    <List title="Sản phẩm bao bì" pagination={pagination}>
       <Box px="lg" my="lg" bg="white">
-        <Group grow>
+        <Group>
           <TextInput
-            size="xs"
             variant="default"
-            w="100%"
             placeholder="Tìm kiếm"
             value={searchValueDraft}
             onChange={(event) => setSearchValueDraft(event.currentTarget.value)}
           />
         </Group>
       </Box>
-      <Modal
+      {/* <Modal
+        radius={0}
         classNames={{
           header: modalClasses.header,
           // root: modalClasses.root,
         }}
         size="55%"
-        fullScreen={isMobile}
+        fullScreen
         opened={opened}
         onClose={close}
         title={<Title order={4}>Thêm bao bì</Title>}
       >
         <CreateComponent />
-      </Modal>
+      </Modal> */}
       <DataTable
         withTableBorder
         minHeight={180}
@@ -176,7 +146,7 @@ function ListComponent() {
         fetching={isLoading}
         highlightOnHover
         columns={columns}
-        records={partners}
+        records={packages}
         verticalSpacing="sm"
         verticalAlign="top"
         noRecordsText="Không có dữ liệu"

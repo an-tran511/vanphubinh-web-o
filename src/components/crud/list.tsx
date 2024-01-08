@@ -47,13 +47,14 @@ export const List = (props: ListProps) => {
     </Anchor>
   ));
   return (
-    <Stack h={{ base: 'calc(100vh - 60px)', md: '100vh' }} pt="lg" gap="0">
+    <Stack h={{ base: 'calc(100vh - 60px)', md: '100vh' }} gap="0">
       <Box
         px="lg"
+        py="lg"
         bg="white"
-        // style={{
-        //   borderBottom: '1px solid #e0e0e0',
-        // }}
+        style={{
+          borderBottom: '1px solid #e0e0e0',
+        }}
       >
         <Group justify="space-between" mt="0">
           <Title order={2}>{title}</Title>
